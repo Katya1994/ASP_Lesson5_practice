@@ -1,0 +1,47 @@
+﻿@page "/AddProduct"
+@using System.ComponentModel.DataAnnotations
+@using BlazorApp.Data
+<h3>Add Product</h3>
+
+@inject AppDbContext Db;
+
+<EditForm Model="_model" OnValidSubmit="ProcessValidForm">
+  <DataAnnotationsValidator/>
+ 
+  Название продукта: <InputText @bind-Value="_model.Name" />
+  Цена: <InputText @bind-Value="_model.Price" />
+  Адрес картинки: <InputText @bind-Value="_model.URL" />
+  @* Красивее оборачивать в table *@
+ 
+  <br/> <input type="submit" value="Добавить в базу">
+  <ValidationSummary/>
+
+</EditForm>
+
+@code {
+  private AddFormModel _model = new();
+
+  private class AddFormModel
+  {
+    [Required]
+    public string Name { get; set; }
+    
+    [Required]
+    public string Price { get; set; }
+
+    [Required]
+    public string URL { get; set; } = "";
+  }
+
+  private void ProcessValidForm()
+  {
+    //логика обработки формы
+    AddProductToDB(new Product(_model.Name, decimal.Parse(_model.Price), _model.URL));
+  }
+  
+  public void AddProductToDB(Product product)
+  {
+    Db.Orders.Add(product);
+    Db.SaveChangesAsync();
+  }
+}

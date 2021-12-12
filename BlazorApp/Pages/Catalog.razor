@@ -1,0 +1,45 @@
+﻿@page "/Catalog"
+@using BlazorApp.Data
+<h3>Catalog</h3>
+
+@inject ICatalog _Catalog;
+@inject AppDbContext Db;
+
+@for (int i = 0; i < _Catalog.List.Count; i++)
+{
+    <div>@i)Product: Книга автора @_Catalog.List[i].Author : @_Catalog.List[i].Price руб.
+        <img src=@_Catalog.List[i].Url>
+        <button>Купить</button>
+    </div>                                                                      
+}
+
+<header>From DataBase:</header>
+@foreach (var item in _Catalog.List)
+{
+    <div>@item.Id) @item.Author: @item.Price</div>
+}
+
+@code {
+    //ICatalog cat = new MyCatalog();
+    protected override void OnInitialized()
+    {
+        _Catalog = new MyCatalog();
+        Db.Orders.AddRange(_Catalog.List);
+        AddProductToDB(new Product("Ягудина Екатерина", 150, "https://подарочные-книги.рф/image/cache/catalog/books/leather-bound/skazki-hansa-kristiana-andersona6-1200x900.jpg"));
+        Db.SaveChangesAsync();
+
+        List<Product> list = GetDataFromDB();
+        _Catalog.List = list;
+    }
+
+    public void AddProductToDB(Product product)
+    {
+        Db.Orders.Add(product);
+        Db.SaveChangesAsync();
+    }
+
+    public List<Product> GetDataFromDB()
+    {
+        return Db.Orders.ToList();
+    }
+}
