@@ -1,0 +1,13 @@
+﻿<h3>ProductItem</h3>
+
+<div>Название: @Product.Name</div>
+<div>Цена: @Product.Price</div>
+<div>
+    <img src="@Product.Url"/>
+</div>
+
+@*Выделите плитку товара в отдельный Razor-компонент и переиспользуйте его в каталоге и корзине*@
+@code {
+    [Parameter]
+    public Product Product { get; set; }
+}

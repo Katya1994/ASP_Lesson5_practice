@@ -1,0 +1,65 @@
+﻿@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+
+@page "/Basket"
+<div style="display: inline-block">
+    <h3>Корзина:</h3>
+    <button style="background-color: #3dd5f3; height: 50px; width: 300px; margin-left: 200%" @onclick="f => ClearBasket()">Очистить корзину</button>
+</div>
+
+
+@inject IBasket _Basket;
+@inject ProtectedLocalStorage _localStorage;
+
+@foreach (var item in basketProducts)
+{
+    <div style="background-color: lightyellow; margin: 20px">
+        @item.Key.Name: @item.Key.Price руб. * @item.Value
+        <div>ИТОГО: @GetTotalPrice(item.Key.Price, item.Value) руб.</div>
+        <button @onclick="f => DeleteProduct(item.Key)">Удалить товарную позицию</button>
+    </div>
+}
+
+
+@code {
+    Dictionary<Product, int> basketProducts;
+    
+    protected override void OnInitialized()
+    {
+        basketProducts = _Basket.GetBasketProducts();
+        
+    //не сериализуется
+    //SaveBasketProducts(basketProducts);
+    }
+
+    public decimal GetTotalPrice(decimal price, decimal count) => price * count;
+
+    private void ClearBasket()
+    {
+        _Basket.ClearBasket();
+    }
+    
+    private void DeleteProduct(Product product)
+    {
+        _Basket.DeleteProduct(product);
+    }
+    
+    private void SaveBasketProducts(Dictionary<Product, int> dictionary)
+    {
+        _localStorage.SetAsync("myBasket", dictionary);
+    }
+    
+    /*protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (firstRender)
+        {
+            var result = await _localStorage.GetAsync<Dictionary<Product, int>>("myBasket");
+            if (result.Success)
+            {
+                basketProducts = result.Value;
+                StateHasChanged();
+            }
+        }
+    }*/
+    
+}

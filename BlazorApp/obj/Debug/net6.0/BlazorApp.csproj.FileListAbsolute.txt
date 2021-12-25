@@ -79,3 +79,4 @@ C:\Users\Kate\Desktop\Solution1\BlazorApp\bin\Debug\net6.0\runtimes\win-arm64\na
 C:\Users\Kate\Desktop\Solution1\BlazorApp\bin\Debug\net6.0\runtimes\win-x64\native\e_sqlite3.dll
 C:\Users\Kate\Desktop\Solution1\BlazorApp\bin\Debug\net6.0\runtimes\win-x86\native\e_sqlite3.dll
 C:\Users\Kate\Desktop\Solution1\BlazorApp\obj\Debug\net6.0\BlazorApp.csproj.CopyComplete
+C:\Users\Kate\Desktop\Solution1\BlazorApp\bin\Debug\net6.0\Blazored.Toast.dll

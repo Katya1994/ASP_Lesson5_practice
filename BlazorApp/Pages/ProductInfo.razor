@@ -1,0 +1,31 @@
+﻿@page "/ProductInfo/{productName}"
+<h3>Информация о товаре: @ProductName</h3>
+<div>
+    <p>
+        @product.Description
+    </p>
+    <img style="width: 200px; height: auto" src=@product.Url/>
+</div>
+
+@inject ICatalog _Catalog;
+
+@code {
+
+    [Parameter]
+    public string ProductName { get; set; }
+
+    Product product;
+    
+    protected override void OnInitialized()
+    {
+        IList<Product> list = new List<Product>();
+        foreach (var item in _Catalog.GetProductList().Values)
+        {
+            foreach (var p in item)
+            {
+                list.Add(p);
+            }
+        }
+        product = list.Select(p => p).Where(p => p.Name == ProductName).FirstOrDefault();
+    }
+}

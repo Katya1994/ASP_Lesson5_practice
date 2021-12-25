@@ -1,0 +1,25 @@
+﻿@page "/CatalogForProductItem"
+<h3>CatalogForProductItem</h3>
+
+@inject ICatalog _Catalog;
+
+@foreach (var product in _products)
+{
+    <ProductItem Product="product" />
+}
+
+
+@code {
+    IList<Product> _products = new List<Product>();
+    protected override void OnInitialized()
+    {
+        foreach (var item in _Catalog.GetProductList().Values)
+        {
+            foreach (var p in item)
+            {
+                _products.Add(p);
+            }
+        }
+    }
+
+}

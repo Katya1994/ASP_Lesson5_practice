@@ -1,9 +1,15 @@
 ﻿@page "/AddProduct"
 @using System.ComponentModel.DataAnnotations
 @using BlazorApp.Data
+@using Blazored.Toast
+@using Blazored.Toast.Services
+
 <h3>Add Product</h3>
 
 @inject AppDbContext Db;
+@inject IToastService toastService;
+@inject IProductRepository _Repository;
+@inject ILogger<ProductRepository> logger;
 
 <EditForm Model="_model" OnValidSubmit="ProcessValidForm">
   <DataAnnotationsValidator/>
@@ -11,8 +17,7 @@
   Название продукта: <InputText @bind-Value="_model.Name" />
   Цена: <InputText @bind-Value="_model.Price" />
   Адрес картинки: <InputText @bind-Value="_model.URL" />
-  @* Красивее оборачивать в table *@
- 
+
   <br/> <input type="submit" value="Добавить в базу">
   <ValidationSummary/>
 
@@ -20,7 +25,7 @@
 
 @code {
   private AddFormModel _model = new();
-
+  
   private class AddFormModel
   {
     [Required]
@@ -36,12 +41,25 @@
   private void ProcessValidForm()
   {
     //логика обработки формы
-    AddProductToDB(new Product(_model.Name, decimal.Parse(_model.Price), _model.URL));
+    try
+    {
+      AddProductToDB(new Product(_model.Name, decimal.Parse(_model.Price), _model.URL));
+    }
+    catch (Exception ex)
+    {
+      logger.LogError(ex, "Не удалось создать экзмепляр продукт");
+    }
   }
   
   public void AddProductToDB(Product product)
   {
-    Db.Orders.Add(product);
-    Db.SaveChangesAsync();
+    try
+    {
+      _Repository.Add(product);
+    }
+    catch (Exception ex)
+    {
+      logger.LogError(ex, "Не удалось добавить в базу данных");
+    }
   }
 }

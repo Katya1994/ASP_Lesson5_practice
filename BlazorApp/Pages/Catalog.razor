@@ -1,13 +1,16 @@
-﻿@page "/Catalog"
+﻿@*@page "/Catalog"
 @using BlazorApp.Data
+@using Microsoft.Extensions.Logging;
 <h3>Catalog</h3>
 
 @inject ICatalog _Catalog;
 @inject AppDbContext Db;
+@inject IProductRepository _Repository;
+@inject ILogger<ProductRepository> logger;
 
 @for (int i = 0; i < _Catalog.List.Count; i++)
 {
-    <div>@i)Product: Книга автора @_Catalog.List[i].Author : @_Catalog.List[i].Price руб.
+    <div>@i)Product: Книга автора @_Catalog.List[i].Name : @_Catalog.List[i].Price руб.
         <img src=@_Catalog.List[i].Url>
         <button>Купить</button>
     </div>                                                                      
@@ -16,7 +19,7 @@
 <header>From DataBase:</header>
 @foreach (var item in _Catalog.List)
 {
-    <div>@item.Id) @item.Author: @item.Price</div>
+    <div>@item.Id) @item.Name: @item.Price</div>
 }
 
 @code {
@@ -24,22 +27,106 @@
     protected override void OnInitialized()
     {
         _Catalog = new MyCatalog();
-        Db.Orders.AddRange(_Catalog.List);
-        AddProductToDB(new Product("Ягудина Екатерина", 150, "https://подарочные-книги.рф/image/cache/catalog/books/leather-bound/skazki-hansa-kristiana-andersona6-1200x900.jpg"));
-        Db.SaveChangesAsync();
+        _Repository = new ProductRepository(Db, logger);
+
+        //Db.Orders.AddRange(_Catalog.List);
+        //Db.SaveChangesAsync();
 
         List<Product> list = GetDataFromDB();
         _Catalog.List = list;
     }
 
-    public void AddProductToDB(Product product)
-    {
-        Db.Orders.Add(product);
-        Db.SaveChangesAsync();
-    }
+    // public void AddProductToDB(Product product)
+    // {
+    //     Db.Orders.Add(product);
+    //     Db.SaveChangesAsync();
+    // }
 
     public List<Product> GetDataFromDB()
     {
         return Db.Orders.ToList();
+    }
+}*@
+
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+@using BlazorApp.Data
+@using Microsoft.Extensions.Logging;
+@page "/Catalog"
+
+@inject ICatalog _Catalog;
+@inject IBasket _Basket;
+@inject ProtectedLocalStorage _localStorage;
+@inject AppDbContext Db;
+@inject IProductRepository _Repository;
+@inject ILogger<ProductRepository> logger;
+@inject IToastService toastService;
+
+<h2>Общий Каталог:</h2>
+<div style="box-sizing: border-box; display: flex; flex-wrap: wrap;">
+    @foreach (var item in productList)
+    {
+        <div style="width: 200px; margin: 10px; padding: 10px; box-sizing: border-box; background-color: #6f42c1">
+            <h1 style="color: white" >@item.Key.ToString()</h1>
+            <button @onclick="f => GetSelectedCatalog(item.Key)">Show category</button>
+        </div>
+    }
+</div>
+<section style="background-color: #343a40; width: 100%; height: 10px;"></section>
+<h2>Каталог категории:</h2>
+<div style="box-sizing: border-box; display: flex; flex-wrap: wrap;">
+    @foreach (var item in selectedList)
+    {
+        <div style="width: 300px; margin: 30px; padding: 10px; box-sizing: border-box">
+            <h3 style="font-size: 20px">
+                <NavLink href="@($"ProductInfo/{item.Name}")">
+                     @item.Name
+                </NavLink>
+            </h3>
+            <h3>@item.Price руб.</h3>
+            <img style="width: 250px; height: 350px" src=@item.Url>
+            <div style="margin-top: 10px">
+                <button style="background-color: aquamarine; width: 250px; height: 60px;"
+                        @onclick="f => AddToBasket(item)">Купить</button>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    IDictionary<Category, List<Product>> productList;
+    Dictionary<Product, int> basketProducts = new Dictionary<Product, int>();
+    IList<Product> selectedList = new List<Product>();
+
+    protected override void OnInitialized()
+    {
+        productList = _Catalog.GetProductList();
+        basketProducts = _Basket.GetBasketProducts();
+        _Repository = new ProductRepository(Db, logger);
+    }
+
+    private void AddToBasket(Product product)
+    {
+        _Basket.AddToBasket(product);
+        toastService.ShowSuccess($"Товар: {product.Name} - добавлен в корзину");
+    }
+
+    private void GetSelectedCatalog(Category category) => selectedList = productList[category];
+    
+    private void SaveBasketProducts(Product product)
+    {
+        _localStorage.SetAsync("myBasket", product);
+    }
+    
+    //с базой данных
+    public void AddProductToDB(Product product)
+    {
+        // Db.Orders.Add(product);
+        // Db.SaveChangesAsync();
+        _Repository.Add(product);
+    }
+    
+    public List<Product> GetDataFromDB()
+    {
+        return _Repository.GetProductList().Result;
     }
 }

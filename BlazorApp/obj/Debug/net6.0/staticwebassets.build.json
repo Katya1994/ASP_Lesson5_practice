@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "GJSLTI7h0zPN4Dqid7wulsCkkOE0hYN5Bk4se5wmhC8=",
+  "Hash": "2rXlXRoxhsPjZzV1JFSPaBgldQa5Oqb8wlkB8MgtrKo=",
   "Source": "BlazorApp",
   "BasePath": "_content/BlazorApp",
   "Mode": "Default",
@@ -16,6 +16,40 @@
     }
   ],
   "Assets": [
+    {
+      "Identity": "C:\\Users\\Kate\\.nuget\\packages\\blazored.toast\\3.2.2\\staticwebassets\\blazored-toast.css",
+      "SourceId": "Blazored.Toast",
+      "SourceType": "Package",
+      "ContentRoot": "C:\\Users\\Kate\\.nuget\\packages\\blazored.toast\\3.2.2\\staticwebassets\\",
+      "BasePath": "_content/Blazored.Toast",
+      "RelativePath": "blazored-toast.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "C:\\Users\\Kate\\.nuget\\packages\\blazored.toast\\3.2.2\\staticwebassets\\blazored-toast.css"
+    },
+    {
+      "Identity": "C:\\Users\\Kate\\.nuget\\packages\\blazored.toast\\3.2.2\\staticwebassets\\blazored-toast.min.css",
+      "SourceId": "Blazored.Toast",
+      "SourceType": "Package",
+      "ContentRoot": "C:\\Users\\Kate\\.nuget\\packages\\blazored.toast\\3.2.2\\staticwebassets\\",
+      "BasePath": "_content/Blazored.Toast",
+      "RelativePath": "blazored-toast.min.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "C:\\Users\\Kate\\.nuget\\packages\\blazored.toast\\3.2.2\\staticwebassets\\blazored-toast.min.css"
+    },
     {
       "Identity": "C:\\Users\\Kate\\Desktop\\Solution1\\BlazorApp\\obj\\Debug\\net6.0\\scopedcss\\bundle\\BlazorApp.styles.css",
       "SourceId": "BlazorApp",

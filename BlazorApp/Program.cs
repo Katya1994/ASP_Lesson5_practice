@@ -2,7 +2,10 @@ using BlazorApp;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using BlazorApp.Data;
+using BlazorApp.Pages;
+using Blazored.Toast;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,7 +14,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
-builder.Services.AddSingleton<ICatalog, MyCatalog>();
+builder.Services.AddSingleton<IClock, ClockUtc>();
+builder.Services.AddSingleton<ICatalog, SimpleCatalog>();
+builder.Services.AddSingleton<IBasket, SimpleBasket>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddBlazoredToast();
 
 var dbPath = "myapp.db";
 builder.Services.AddDbContext<AppDbContext>(

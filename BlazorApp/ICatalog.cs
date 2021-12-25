@@ -2,5 +2,5 @@
 
 public interface ICatalog
 {
-    IList<Product> List { get; set; }
+    IDictionary<Category, List<Product>> GetProductList();
 }
